@@ -6,6 +6,7 @@ This is a simple Python script used to automatically add events to calendar appl
 Python extension ics, which is available at https://pypi.org/project/ics/, is required.
 
 ## Quick start
+First download the code and make sure you can locate the directory that contains the converter.py script.
 1. Log into the NYXchange website and open up the 10-Day Time Table
 2. At the timetable webpage, press F12 to access the developer tools.
 3. Refresh the webpage. Under the network tab of the developer tools, you will see files being detected. Right click the file named 'index_ex.php' and save it to the same directory as the converter.py script.
