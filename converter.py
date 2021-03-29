@@ -1,4 +1,4 @@
-from ics import Event, Calendar
+from ics import Event, Calendar, DisplayAlarm
 from datetime import datetime, timedelta
 import sys
 
@@ -17,14 +17,21 @@ except OSError:
 type = str(input('Is the starting week A or B?')).upper() # Starting week
 assert type == 'A' or type =='B', 'Only A or B should be provided!'
 
-date = input('Key in the date for Mon A (MM/DD):') # Initial day input
+date = input('Key in the date for the first Monday (MM/DD):') # Initial day input
 date = date.split('/')
 date = datetime(datetime.now().year, int(date[0]), int(date[1]), 7, 30)
 
 rec = input('Key in how many times the 10-day timetable should be repeated:') # Recurrence input
 rec = int(rec)
 
+alarm_switch = str(input('Should alarms be included? (Y/N)'))
+assert alarm_switch == 'Y' or 'y' or 'N' or 'n', 'Only Y or N should be provided!'
 
+if alarm_switch == 'Y' or 'y':
+    alarm_switch = True
+else:
+    alarm_switch = False
+    
 def add_lesson(start, type):
     i = -1 # Counter for days
     k = 0 # Counter for (half) hours
@@ -40,6 +47,7 @@ def add_lesson(start, type):
             k = 0
         elif '<td bgcolor' in doc[m]: # Check for blank time slots
             k += 1
+            blank_switch = True
         elif '<td colspan' in doc[m]: # Check for lessons
             # Extract lesson names
             name = doc[m+1].replace('\t\t\t<p class="Large">', '')
@@ -73,7 +81,16 @@ def add_lesson(start, type):
                 e.begin = time_i
                 e.duration = d
                 c.events.add(e)
-
+                
+            # Add alarm
+            if alarm_switch == True:           
+                if blank_switch == True:
+                    e.alarms = [DisplayAlarm(trigger=timedelta(minutes=-10))]
+                else:
+                    e.alarms = [DisplayAlarm(trigger=timedelta(minutes=0))]
+            else:
+                pass
+            
             k += int(doc[m][45])
         else:
             pass
