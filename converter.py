@@ -80,23 +80,25 @@ def add_lesson(start, type):
                 e.location = location
                 e.begin = time_i
                 e.duration = d
+
+                # Add alarm
+                if alarm_switch == True:           
+                    if blank_switch == True:
+                        e.alarms = [DisplayAlarm(trigger=timedelta(minutes=-15))]
+                        blank_switch = False
+                    else:
+                        e.alarms = [DisplayAlarm(trigger=timedelta(minutes=-5))]
+                else:
+                    pass
+
                 c.events.add(e)
                 
-            # Add alarm
-            if alarm_switch == True:           
-                if blank_switch == True:
-                    e.alarms = [DisplayAlarm(trigger=timedelta(minutes=-10))]
-                else:
-                    e.alarms = [DisplayAlarm(trigger=timedelta(minutes=0))]
-            else:
-                pass
-            
             k += int(doc[m][45])
         else:
             pass
 
 
-switch = False # Switch from week to week
+switch = False # Switch for week progression
 
 for m in range(len(doc)):
     if 'B</td>' in doc[m] and switch == False: # Check for week progression
