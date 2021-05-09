@@ -33,7 +33,7 @@ public class TimetableConverter {
         String dateString = scanner.nextLine();
 
         int recurCount = 0;
-        System.out.println("Enter the times of recurrence (one recurrence is two weeks)");
+        System.out.println("Enter the times of recurrence (one recurrence is one week)");
         recurCount = Integer.valueOf(scanner.nextLine());
 
         long startMillisLong;
@@ -54,22 +54,15 @@ public class TimetableConverter {
             BufferedReader reader = new BufferedReader(isr);
             String stringBuffer = "";
 
-            for (int i = 0; i <= 32; i++) {
-                //read the first 33 lines
+            for (int i = 0; i <= 36; i++) {
+                //read the first 37 lines
                 reader.readLine();
             }
 
 
-            for (int i = 0; i <=10; i++) {
+            for (int i = 0; i <=4; i++) {
                 stringBuffer = reader.readLine().trim();
-                int dateNumber = 0;
-                if (i <= 4) {
-                    dateNumber = i;
-                } else if (dateNumber == 5){
-                    continue;
-                } else {
-                    dateNumber = i + 1;
-                }
+                int dateNumber = i;
 
                 Long millisLong = startMillisLong + dateNumber * 86400000 + 27000000 ;
                 while (!stringBuffer.startsWith("</tr>")) {
@@ -98,7 +91,7 @@ public class TimetableConverter {
                         event.setDateStart(new Date(startTime));
                         Duration duration = new Duration.Builder().minutes(durationInt * 30).build();
                         event.setDuration(duration);
-                        Recurrence recur = new Recurrence.Builder(Frequency.WEEKLY).interval(2).count(recurCount).build();
+                        Recurrence recur = new Recurrence.Builder(Frequency.WEEKLY).interval(1).count(recurCount).build();
                         event.setRecurrenceRule(recur);
                         ical.addEvent(event);
 
