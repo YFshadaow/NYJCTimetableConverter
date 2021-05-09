@@ -14,14 +14,20 @@ except OSError:
     print('index_ex.php file is not found!')
     sys.exit()
 
-type = str(input('Is the starting week A or B?')).upper() # Starting week
-assert type == 'A' or type =='B', 'Only A or B should be provided!'
+length = int(input('Is the timetable a 5-day one or 10-day one?'))
+assert length == 5 or length == 10, 'Only 5 or 10 should be provided!'
+
+if length == 10:
+    type = str(input('Is the starting week A or B?')).upper() # Starting week
+    assert type == 'A' or type =='B', 'Only A or B should be provided!'
+else:
+    pass
 
 date = input('Key in the date for the first Monday (MM/DD):') # Initial day input
 date = date.split('/')
 date = datetime(datetime.now().year, int(date[0]), int(date[1]), 7, 30)
 
-rec = input('Key in how many times the 10-day timetable should be repeated:') # Recurrence input
+rec = input('Key in how many times the 10-day or 5-day timetable should be repeated:') # Recurrence input
 rec = int(rec)
 
 alarm_switch = str(input('Should alarms be included? (Y/N)'))
@@ -72,7 +78,7 @@ def add_lesson(start, type):
 
             # Add event with recurrence
             for n in range(rec):
-                time_i = start + timedelta(days = i + 14*n, hours = k/2 - 8)
+                time_i = start + timedelta(days = i + 7*(length/5)*n, hours = k/2 - 8)
                 d = timedelta(hours = int(doc[m][45])/2)
 
                 e = Event()
@@ -101,18 +107,22 @@ def add_lesson(start, type):
 switch = False # Switch for week progression
 
 for m in range(len(doc)):
-    if 'B</td>' in doc[m] and switch == False: # Check for week progression
+    if 'B</td>' in doc[m] and switch == False: # Check for the line where week progression occurs
             switch = True
             B_line = m-1
     else:
+        B_line = len(doc)
         pass
 
-if type == 'A':
-    add_lesson(date, 'A')
-    add_lesson(date + timedelta(days=7), 'B')
+if length == 10:
+    if type == 'A':
+        add_lesson(date, 'A')
+        add_lesson(date + timedelta(days=7), 'B')
+    else:
+        add_lesson(date, 'B')
+        add_lesson(date + timedelta(days=7), 'A')
 else:
-    add_lesson(date, 'B')
-    add_lesson(date + timedelta(days=7), 'A')
+    add_lesson(date, 'A')
 
 # ics file output
 with open('my.ics', 'w') as f:
