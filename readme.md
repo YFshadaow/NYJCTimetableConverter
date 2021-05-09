@@ -3,3 +3,5 @@ The program is a runnable program and will require the index_ex.php file from ny
 
 This program depends on biweekly and its dependencies.
 https://github.com/mangstadt/biweekly
+
+Due to the timetable being changed to weekly, a Weekly branch is created for the updated code.
